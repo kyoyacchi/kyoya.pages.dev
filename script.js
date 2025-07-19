@@ -384,14 +384,18 @@ function setupParticleCanvas() {
     const animatedElements = document.querySelectorAll('.animate-on-scroll');
     if (!animatedElements.length) return;
 
+    // Ensure elements that should slide start in their offset position before visibility.
+    const slideUpTargets = '.profile-header, .bio, .social-icons, footer, .tweet-embed-container';
+    animatedElements.forEach(el => {
+        if (el.matches(slideUpTargets)) {
+            el.classList.add('slide-up');
+        }
+    });
+
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
-
-                if (entry.target.matches('.profile-header, .bio, .social-icons, footer, .tweet-embed-container')) {
-                   entry.target.classList.add('slide-up');
-                }
                 observer.unobserve(entry.target);
             }
         });
