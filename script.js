@@ -407,6 +407,16 @@ function setupParticleCanvas() {
     animatedElements.forEach(el => { observer.observe(el); });
 }
 
+function prepareScrollAnimationElements() {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    const slideUpTargets = '.profile-header, .bio, .social-icons, footer, .tweet-embed-container';
+    animatedElements.forEach(el => {
+        if (el.matches(slideUpTargets)) {
+            el.classList.add('slide-up');
+        }
+    });
+}
+
 
     function summonYae(){
       document.addEventListener("click", (e) => {
@@ -807,6 +817,8 @@ function startBirthdayCelebration() {
 
 
    function initializePage() {
+    // Ensure initial offset classes are applied before any preloader/observer logic.
+    prepareScrollAnimationElements();
     handleIntroOverlay();
 
    connectLanyard();
