@@ -103,6 +103,8 @@ function handleIntroOverlay() {
         setTimeout(() => {
             introOverlay.style.display = 'none';
             document.body.style.overflow = 'auto';
+            // NEW: Notify that preloader has finished so other logic can safely start
+            document.dispatchEvent(new Event('preloaderHidden'));
         }, 1000);
     };
 
@@ -382,7 +384,7 @@ function setupParticleCanvas() {
     const animatedElements = document.querySelectorAll('.animate-on-scroll');
     if (!animatedElements.length) return;
 
-    const observer = new IntersectionObserver((entries, obs) => {
+    const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('is-visible');
@@ -390,7 +392,7 @@ function setupParticleCanvas() {
                 if (entry.target.matches('.profile-header, .bio, .social-icons, footer, .tweet-embed-container')) {
                    entry.target.classList.add('slide-up');
                 }
-                obs.unobserve(entry.target);
+                observer.unobserve(entry.target);
             }
         });
     }, {
@@ -808,7 +810,15 @@ function startBirthdayCelebration() {
     setupTweetEmbed('.tweet-embed-container');
  //  PreventRightClick();
   setupParticleCanvas();
-    setupScrollAnimations();
+    // Start scroll-triggered animations only after the preloader fully disappears.
+    if (document.querySelector('.intro-overlay')) {
+      document.addEventListener('preloaderHidden', () => {
+        setupScrollAnimations();
+      }, { once: true });
+    } else {
+      // If there is no preloader, start animations immediately.
+      setupScrollAnimations();
+    }
     initializeDynamicBanner();
 //initializeBirthdayCountdown();
 startBirthdayCelebration();
