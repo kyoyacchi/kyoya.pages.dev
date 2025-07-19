@@ -1673,3 +1673,33 @@ html {
         0 0 20px var(--raiden-glow);
     transform: translateY(-3px);
 }
+
+/* ============================= */
+/* Raiden Lightning Flash Effect */
+/* ============================= */
+.lightning-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 900;
+    opacity: 0;
+    mix-blend-mode: screen;
+    background: radial-gradient(circle at center, rgba(174, 99, 228, 0.45) 0%, rgba(174, 99, 228, 0) 70%);
+    transition: opacity 0.25s ease-out; /* fallback if no keyframe applied */
+}
+
+.lightning-overlay.flash {
+    animation: lightningFlash 0.6s ease-out forwards;
+}
+
+@keyframes lightningFlash {
+    0%   { opacity: 0.9; }
+    15%  { opacity: 0.6; }
+    30%  { opacity: 0.85; }
+    50%  { opacity: 0.4; }
+    70%  { opacity: 0.7; }
+    100% { opacity: 0; }
+}

@@ -815,11 +815,33 @@ function startBirthdayCelebration() {
 
 }
 
+function setupLightningEffect() {
+    const overlay = document.querySelector('.lightning-overlay');
+    if (!overlay) return;
+
+    const FLASH_DURATION = 700; // ms
+    const CHECK_INTERVAL = 6000; // ms
+    const TRIGGER_CHANCE = 0.25; // 25% chance each interval
+
+    function flash() {
+        overlay.classList.add('flash');
+        setTimeout(() => overlay.classList.remove('flash'), FLASH_DURATION);
+    }
+
+    // Random periodic flashes
+    setInterval(() => {
+        if (document.hidden) return; // Skip when tab not active
+        if (Math.random() < TRIGGER_CHANCE) flash();
+    }, CHECK_INTERVAL);
+
+    // Optional: manual trigger on click for fun
+    document.addEventListener('click', () => {
+        if (Math.random() < 0.05) flash(); // 5% chance on any click
+    });
+}
 
 
-
-
-   function initializePage() {
+    function initializePage() {
     // Ensure initial offset classes are applied before any preloader/observer logic.
     prepareScrollAnimationElements();
     handleIntroOverlay();
@@ -829,6 +851,7 @@ function startBirthdayCelebration() {
     setupTweetEmbed('.tweet-embed-container');
  //  PreventRightClick();
   setupParticleCanvas();
+    setupLightningEffect();
     // Start scroll-triggered animations only after the preloader fully disappears.
     if (document.querySelector('.intro-overlay')) {
       document.addEventListener('preloaderHidden', () => {
