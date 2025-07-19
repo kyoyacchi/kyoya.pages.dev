@@ -99,12 +99,15 @@ function handleIntroOverlay() {
     const subtitleText = document.querySelector('.subtitle-text');
 
     const hidePreloader = () => {
+        // Fire event FIRST so other animations can start while overlay is still fading.
+        document.dispatchEvent(new Event('preloaderHidden'));
+
+        // Begin fade-out.
         introOverlay.style.opacity = '0';
+
         setTimeout(() => {
             introOverlay.style.display = 'none';
             document.body.style.overflow = 'auto';
-            // NEW: Notify that preloader has finished so other logic can safely start
-            document.dispatchEvent(new Event('preloaderHidden'));
         }, 1000);
     };
 
